@@ -1,0 +1,36 @@
+name: Google Authentication Workflow
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  google-auth:
+    runs-on: ubuntu-latest  # Puede cambiarse según el entorno que necesites
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.8'  # Usa la versión de Python que prefieras
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt  # Asegúrate de tener un archivo requirements.txt con las dependencias necesarias
+
+      - name: Set up Google credentials
+        run: |
+          mkdir -p ~/.config/gcloud
+          echo "${{ secrets.GOOGLE_CREDENTIALS_JSON }}" > ~/.config/gcloud/application_default_credentials.json
+
+      - name: Run Python script
+        run: |
+          python app.py  # Cambia esto al nombre del archivo que contiene el código de autenticación y uso de Google Sheets
